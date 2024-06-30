@@ -22,7 +22,7 @@ import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import { useNavigate } from "react-router-dom";
 import useUserStore from "../../../hooks/user";
-import { useState } from "react";
+import { Toaster, toast } from "sonner";
 
 const StaffSignIn = () => {
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -34,25 +34,28 @@ const StaffSignIn = () => {
   });
   const navigate = useNavigate();
   const { loginAsStaff } = useUserStore();
-  const [error, setError] = useState<string | null>(null);
 
   async function onSubmit(values: z.infer<typeof loginSchema>) {
     try {
       const userData = await loginAsStaff(values.email, values.password);
       if (userData) {
         console.log("Staff login successful:", userData);
-        navigate("/staff/home"); // Navigate to staff home page
+        toast.success("Login successful!");
+        setTimeout(() => {
+          navigate("/staff/home");
+        }, 1500);
       } else {
-        setError("Failed to login as staff. Please check your credentials.");
+        toast.error("Failed to login as staff. Please check your credentials.");
       }
     } catch (error) {
       console.error("An unexpected error occurred:", error);
-      setError("An unexpected error occurred. Please try again later.");
+      toast.error("An unexpected error occurred. Please try again later.");
     }
   }
 
   return (
     <main className="w-full h-screen bg-orange-300 flex items-center justify-center">
+      <Toaster position="top-center" richColors closeButton />{" "}
       <Card className="w-80">
         <CardHeader>
           <CardTitle>Staff Sign In</CardTitle>
@@ -97,7 +100,6 @@ const StaffSignIn = () => {
                   </FormItem>
                 )}
               />
-              {error && <p className="text-red-500 text-sm">{error}</p>}
             </CardContent>
             <CardFooter className="flex flex-col gap-2">
               <Button type="submit" className="w-full">

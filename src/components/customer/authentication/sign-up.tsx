@@ -21,6 +21,7 @@ import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Toaster, toast } from "sonner"; // Import Toaster and toast from sonner
 
 const SignUp = () => {
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -45,15 +46,21 @@ const SignUp = () => {
         }
       );
       if (res) {
-        console.log("signup successfull");
+        console.log("signup successful");
+        toast.success("Signup successful!"); // Show success toast
+        setTimeout(() => {
+          navigate("/customer/signin"); // Navigate to signin page after a short delay
+        }, 1500); // Delay of 1.5 seconds
       }
     } catch (err) {
       console.log(err);
+      toast.error("Signup failed. Please try again."); // Show error toast
     }
   }
 
   return (
     <main className="w-full h-screen bg-orange-300 flex items-center justify-center">
+      <Toaster position="top-center" /> 
       <Card className="w-80">
         <CardHeader>
           <CardTitle>Sign Up</CardTitle>
@@ -81,17 +88,16 @@ const SignUp = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input placeholder="xyz" {...field} />
+                      <Input type="password" placeholder="********" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
               />
             </CardContent>
             <CardFooter className="flex flex-col gap-2">
-              <Button>Sign Up</Button>
+              <Button type="submit">Sign Up</Button>
               <section className="text-center">
-                {" "}
-                Already an account.
+                Already have an account?
                 <Button variant={"link"} onClick={handleCustomerSignIn}>
                   Sign In
                 </Button>

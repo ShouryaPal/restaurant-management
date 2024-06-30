@@ -22,6 +22,7 @@ import { Button } from "../../ui/button";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import useUserStore from "../../../hooks/user";
+import { Toaster, toast } from "sonner"; 
 
 const SignIn = () => {
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -42,17 +43,24 @@ const SignIn = () => {
         { withCredentials: true }
       );
       console.log("Login successful:", response.data);
+      toast.success("Login successful!"); 
 
       const userData = await refetchUser();
       if (userData) {
         setUser(userData);
-        navigate("/customer/home");
+        setTimeout(() => {
+          navigate("/customer/home");
+        }, 1500); 
       } else {
+        toast.error("Failed to fetch user data after login");
         console.error("Failed to fetch user data after login");
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data || "An unexpected error occurred");
         console.error("Login error:", error.response?.data);
+      } else {
+        toast.error("An unexpected error occurred");
         console.error("An unexpected error occurred:", error);
       }
     }
@@ -60,6 +68,7 @@ const SignIn = () => {
 
   return (
     <main className="w-full h-screen bg-orange-300 flex items-center justify-center">
+      <Toaster position="top-center" richColors closeButton />{" "}
       <Card className="w-80">
         <CardHeader>
           <CardTitle>Sign In</CardTitle>
@@ -87,17 +96,16 @@ const SignIn = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input placeholder="xyz" {...field} />
+                      <Input type="password" placeholder="xyz" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
               />
             </CardContent>
             <CardFooter className="flex flex-col gap-2">
-              <Button>Sign In</Button>
+              <Button type="submit">Sign In</Button>
               <section className="text-center">
-                {" "}
-                Not an account ?
+                Not an account?
                 <Button variant={"link"} onClick={handleCustomerSignUp}>
                   Sign Up
                 </Button>
