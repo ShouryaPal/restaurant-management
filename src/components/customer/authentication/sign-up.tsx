@@ -16,6 +16,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "../../ui/form";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
@@ -46,21 +47,20 @@ const SignUp = () => {
         }
       );
       if (res) {
-        console.log("signup successful");
-        toast.success("Signup successful!"); // Show success toast
+  
+        toast.success("Signup successful!"); 
         setTimeout(() => {
-          navigate("/customer/signin"); // Navigate to signin page after a short delay
-        }, 1500); // Delay of 1.5 seconds
+          navigate("/customer/signin"); 
+        }, 500); 
       }
     } catch (err) {
-      console.log(err);
-      toast.error("Signup failed. Please try again."); // Show error toast
+      toast.error("Signup failed. Please try again."); 
     }
   }
 
   return (
     <main className="w-full h-screen bg-orange-300 flex items-center justify-center">
-      <Toaster position="top-center" /> 
+      <Toaster position="top-center" />
       <Card className="w-80">
         <CardHeader>
           <CardTitle>Sign Up</CardTitle>
@@ -78,6 +78,7 @@ const SignUp = () => {
                     <FormControl>
                       <Input placeholder="xyz@xyz.com" {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -88,8 +89,13 @@ const SignUp = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="********" {...field} />
+                      <Input
+                        type="password"
+                        placeholder="********"
+                        {...field}
+                      />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />

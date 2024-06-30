@@ -39,7 +39,6 @@ const StaffSignIn = () => {
     try {
       const userData = await loginAsStaff(values.email, values.password);
       if (userData) {
-        console.log("Staff login successful:", userData);
         toast.success("Login successful!");
         setTimeout(() => {
           navigate("/staff/home");

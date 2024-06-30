@@ -16,13 +16,14 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "../../ui/form";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import useUserStore from "../../../hooks/user";
-import { Toaster, toast } from "sonner"; 
+import { Toaster, toast } from "sonner";
 
 const SignIn = () => {
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -37,23 +38,21 @@ const SignIn = () => {
 
   async function onSubmit(values: z.infer<typeof loginSchema>) {
     try {
-      const response = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_API_URL}/api/customer/auth/login`,
         values,
         { withCredentials: true }
       );
-      console.log("Login successful:", response.data);
-      toast.success("Login successful!"); 
+      toast.success("Login successful!");
 
       const userData = await refetchUser();
       if (userData) {
         setUser(userData);
         setTimeout(() => {
           navigate("/customer/home");
-        }, 1500); 
+        }, 500);
       } else {
         toast.error("Failed to fetch user data after login");
-        console.error("Failed to fetch user data after login");
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -86,6 +85,7 @@ const SignIn = () => {
                     <FormControl>
                       <Input placeholder="xyz@xyz.com" {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -98,6 +98,7 @@ const SignIn = () => {
                     <FormControl>
                       <Input type="password" placeholder="xyz" {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
